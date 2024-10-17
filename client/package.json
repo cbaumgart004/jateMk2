@@ -1,7 +1,7 @@
 {
   "name": "jate",
   "scripts": {
-    "dev": "webpack serve --open",
+    "dev": "webpack-dev-server",
     "build": "webpack --mode production",
     "start": "webpack --watch"
   },
