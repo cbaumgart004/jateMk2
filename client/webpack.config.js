@@ -3,9 +3,11 @@ const WebpackPwaManifest = require('webpack-pwa-manifest')
 const path = require('path')
 const { InjectManifest } = require('workbox-webpack-plugin')
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 module.exports = () => {
   return {
-    mode: 'development',
+    mode: isProduction ? 'production' : 'development',
     entry: {
       main: './src/js/index.js',
       install: './src/js/install.js',
