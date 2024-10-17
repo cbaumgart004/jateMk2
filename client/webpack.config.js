@@ -1,3 +1,5 @@
+console.log('Loading Webpack configuration...')
+console.log('Running in', process.env.NODE_ENV, 'mode')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
 const path = require('path')
