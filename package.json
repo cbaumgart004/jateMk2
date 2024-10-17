@@ -4,12 +4,12 @@
   "description": "Just Another Text Editor Mark 2.  Couldn't get Mark 1 to fire off.",
   "main": "server.js",
   "scripts": {
-    "start:dev": "",
-    "start": "",
-    "server": "",
-    "build": "",
-    "install": "",
-    "client": ""
+    "start:dev": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "npm run server",
+    "server": "nodemon server.js",
+    "build": "cd client && npm run build",
+    "install": "cd client && npm install --omit=dev && cd ../ && npm install --omit=dev",
+    "client": "cd client && npm start"
   },
   "keywords": [],
   "author": "",
