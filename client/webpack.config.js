@@ -5,59 +5,65 @@ const { InjectManifest } = require('workbox-webpack-plugin')
 
 module.exports = () => {
   return {
-    mode: 'development', // Switch to 'production' for production builds
+    mode: 'development',
     entry: {
-      main: './src/js/index.js', // Your entry points for JavaScript
+      main: './src/js/index.js',
       install: './src/js/install.js',
     },
     output: {
-      filename: '[name].bundle.js', // Bundle naming pattern
-      path: path.resolve(__dirname, 'dist'), // Output directory
+      filename: '[name].bundle.js',
+      path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
-      // HtmlWebpackPlugin to copy index.html to the dist folder
+      // Webpack plugin that generates our html file and injects our bundles.
       new HtmlWebpackPlugin({
-        template: './client/index.html', // Path to index.html in client folder
-        title: 'PWA Text Editor',
+        template: './index.html',
+        title: 'Text Editor',
       }),
-      // WebpackPwaManifest to generate the manifest.json file
+      // Injects our custom service worker
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
+      }),
+      // Creates a manifest.json file.
       new WebpackPwaManifest({
-        name: 'PWA Text Editor',
-        short_name: 'TextEditor',
-        description: 'A simple text editor Progressive Web Application',
-        background_color: '#ffffff',
-        theme_color: '#317EFB',
-        start_url: './', // Starting URL for the PWA
-        publicPath: './', // Public path for assets
+        fingerprints: false,
+        inject: true,
+        name: 'Text Editor',
+        short_name: 'Text Edits',
+        description: 'Edit your Text!',
+        background_color: '#225ca3',
+        theme_color: '#225ca3',
+        start_url: './',
+        publicPath: './',
         icons: [
           {
-            src: path.resolve(__dirname, 'client/src/images/logo.png'), // Path to your logo
-            sizes: [96, 128, 192, 256, 384, 512], // Multiple icon sizes for PWA
-            destination: path.join('assets', 'icons'), // Destination folder inside dist
+            src: path.resolve('src/images/logo.png'),
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('assets', 'icons'),
           },
         ],
       }),
-      // InjectManifest to inject your custom service worker
-      new InjectManifest({
-        swSrc: './client/src-sw.js', // Custom service worker in client folder
-        swDest: 'service-worker.js', // Output file in dist
-      }),
     ],
+
     module: {
       rules: [
-        // CSS loader to handle CSS files
         {
           test: /\.css$/i,
-          use: ['style-loader', 'css-loader'], // Loaders for CSS files
+          use: ['style-loader', 'css-loader'],
         },
-        // Babel loader to transpile modern JavaScript
         {
-          test: /\.m?js$/, // Matches both .js and .mjs files
-          exclude: /node_modules/, // Don't transpile node_modules
+          test: /\.m?js$/,
+          exclude: /node_modules/,
+          // We use babel-loader in order to use ES6.
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'], // Preset for ES6+ support
+              presets: ['@babel/preset-env'],
+              plugins: [
+                '@babel/plugin-proposal-object-rest-spread',
+                '@babel/transform-runtime',
+              ],
             },
           },
         },
